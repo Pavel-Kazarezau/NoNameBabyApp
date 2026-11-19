@@ -93,3 +93,14 @@ export interface ResponsibilitySnapshot {
 
     server_time: string;
 }
+
+export interface ResponsibilityChild extends ChildInfo {
+    family_id: string;
+}
+
+export interface ResponsibilityMember {
+    id: string;
+    role: FamilyMemberRole;
+    user_id: string | null;
+    display_name: string | null;
+}
