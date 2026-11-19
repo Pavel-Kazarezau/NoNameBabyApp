@@ -1,23 +1,18 @@
-import { View, Text, StyleSheet } from 'react-native';
 
-export default function HomeScreen() {
+import { View, Text } from "react-native";
+
+export default function Index() {
     return (
-        <View style={styles.container}>
-            <Text style={styles.title}>Смены</Text>
-            <Text>Приложение успешно запущено!</Text>
+        <View className="flex-1 items-center justify-center bg-slate-100">
+            <View className="rounded-2xl bg-white p-8 shadow-lg">
+                <Text className="text-2xl font-bold text-blue-600">
+                    BabyCare Hub
+                </Text>
+
+                <Text className="mt-2 text-base text-gray-500">
+                    NativeWind is working!
+                </Text>
+            </View>
         </View>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    title: {
-        fontSize: 28,
-        fontWeight: 'bold',
-        marginBottom: 12,
-    },
-});
