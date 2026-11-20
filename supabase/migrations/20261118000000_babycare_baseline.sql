@@ -949,13 +949,12 @@ begin
     select fm.id
     into v_member_id
     from public.family_members fm
-    where fm.id = v_handover.initiated_by
-      and fm.family_id = v_handover.family_id
+    where fm.family_id = v_handover.family_id
       and fm.user_id = v_user_id
       and fm.status = 'ACTIVE';
 
     if v_member_id is null then
-        raise exception 'Only the initiator can cancel this handover'
+        raise exception 'Active family membership required'
             using errcode = '42501';
     end if;
 
@@ -1002,14 +1001,10 @@ begin
     from public.family_members fm
     where fm.family_id = v_plan.family_id
       and fm.user_id = v_user_id
-      and fm.status = 'ACTIVE'
-      and fm.id in (
-          v_plan.created_by,
-          v_plan.responsible_id
-      );
+      and fm.status = 'ACTIVE';
 
     if v_member_id is null then
-        raise exception 'Only the plan creator or planned responsible member can cancel it'
+        raise exception 'Active family membership required'
             using errcode = '42501';
     end if;
 
@@ -2194,7 +2189,7 @@ declare
     v_table text;
 begin
     if exists (select 1 from pg_publication where pubname = 'supabase_realtime') then
-        foreach v_table in array array['responsibilities', 'responsibility_plans', 'handovers'] loop
+        foreach v_table in array array['responsibilities', 'responsibility_periods', 'responsibility_plans', 'handovers'] loop
             if not exists (
                 select 1 from pg_publication_tables
                 where pubname = 'supabase_realtime'

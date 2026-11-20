@@ -26,9 +26,7 @@ export function useResponsibilityMembers(familyId: string) {
     });
 }
 
-export function useResponsibilitySnapshot(
-    childId: string,
-) {
+export function useResponsibilitySnapshot(childId: string) {
     return useQuery({
         queryKey: responsibilityKeys.snapshot(childId),
 
@@ -38,6 +36,12 @@ export function useResponsibilitySnapshot(
         enabled: Boolean(childId),
 
         staleTime: 10_000,
+
+        // Realtime events stay the fast path. This low-frequency refresh also
+        // catches silent socket drops, where the channel still looks subscribed.
+        refetchInterval: 15_000,
+
+        refetchIntervalInBackground: false,
 
         retry: 1,
     });

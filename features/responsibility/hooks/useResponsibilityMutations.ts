@@ -7,7 +7,13 @@ export function useResponsibilityMutation<T>(childId: string, mutationFn: (value
     return useMutation({
         mutationFn,
         onSuccess: async () => {
-            await queryClient.invalidateQueries({queryKey: responsibilityKeys.snapshot(childId)});
+            // The action response confirms the write; immediately fetch the
+            // canonical snapshot so the screen doesn't depend on Realtime.
+            await queryClient.refetchQueries({
+                queryKey: responsibilityKeys.snapshot(childId),
+                exact: true,
+                type: "active",
+            });
         },
     });
 }
