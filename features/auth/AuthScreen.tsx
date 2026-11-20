@@ -84,7 +84,7 @@ export default function AuthScreen() {
                         autoCorrect={false}
                         maxLength={80}
                         onChangeText={setDisplayName}
-                        placeholder="How your family will see you"
+                        placeholder="Your name as your family will see it"
                         placeholderTextColor="#94a3b8"
                         returnKeyType="next"
                         value={displayName}

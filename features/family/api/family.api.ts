@@ -33,8 +33,16 @@ export const familyApi = {
         return data;
     },
 
-    async createFamily(name: string): Promise<string> {
-        const {data, error} = await supabase.rpc("create_family", {p_name: name.trim()});
+    async createFamily(): Promise<string> {
+        const {data: sessionData, error: sessionError} = await supabase.auth.getSession();
+        if (sessionError) throw new Error(sessionError.message);
+        if (!sessionData.session) throw new Error("Sign in to create a family.");
+
+        const displayName = sessionData.session.user.user_metadata?.display_name;
+        const familyName = typeof displayName === "string" && displayName.trim()
+            ? `${displayName.trim()}'s family`
+            : "My family";
+        const {data, error} = await supabase.rpc("create_family", {p_name: familyName});
         if (error) throw new Error(error.message);
         if (typeof data !== "string") throw new Error("create_family returned no family ID");
         return data;

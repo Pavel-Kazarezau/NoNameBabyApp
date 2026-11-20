@@ -14,7 +14,6 @@ const dateForDatabase = (date: Date) => `${date.getFullYear()}-${String(date.get
 
 export default function CreateFamilyScreen() {
     const queryClient = useQueryClient();
-    const [familyName, setFamilyName] = useState("");
     const [childName, setChildName] = useState("");
     const [birthDate, setBirthDate] = useState<Date | null>(null);
     const [showDatePicker, setShowDatePicker] = useState(false);
@@ -49,8 +48,8 @@ export default function CreateFamilyScreen() {
 
     const create = async () => {
         if (loading) return;
-        if (!familyName.trim() || !childName.trim()) {
-            setError("Enter a family name and child name.");
+        if (!childName.trim()) {
+            setError("Enter your child’s name.");
             return;
         }
         setLoading(true);
@@ -58,7 +57,7 @@ export default function CreateFamilyScreen() {
         try {
             let activeFamilyId = familyId;
             if (!activeFamilyId) {
-                activeFamilyId = await familyApi.createFamily(familyName);
+                activeFamilyId = await familyApi.createFamily();
                 setFamilyId(activeFamilyId);
                 const {data} = await supabase.auth.getSession();
                 if (data.session) {
@@ -84,12 +83,8 @@ export default function CreateFamilyScreen() {
             <View className="rounded-3xl bg-white p-5 shadow-sm">
                 <Text className="text-sm font-semibold uppercase tracking-widest text-teal-800">BabyCare Hub</Text>
                 <Text className="mt-2 text-2xl font-bold text-slate-900">{isChildStep ? "Add your child" : "Create your family"}</Text>
-                <Text className="mt-2 leading-6 text-slate-600">{isChildStep ? "Your family is ready. Add a child to start coordinating care." : "Start a private family space for coordinating your child’s care."}</Text>
+                <Text className="mt-2 leading-6 text-slate-600">{isChildStep ? "Your family is ready. Add a child to start coordinating care." : "Start a private family space for coordinating your child’s care. Your family name will be based on your account name."}</Text>
 
-                {!isChildStep && <>
-                    <Text className="mb-2 mt-5 font-semibold text-slate-800">Family name</Text>
-                    <TextInput accessibilityLabel="Family name" autoCapitalize="words" onChangeText={setFamilyName} placeholder="For example, The Smith family" placeholderTextColor="#94a3b8" value={familyName} className="min-h-12 rounded-xl border border-slate-200 px-4 text-base text-slate-900" />
-                </>}
                 <Text className="mb-2 mt-5 font-semibold text-slate-800">Child’s name</Text>
                 <TextInput accessibilityLabel="Child’s name" autoCapitalize="words" onChangeText={setChildName} placeholder="Child’s name" placeholderTextColor="#94a3b8" value={childName} className="min-h-12 rounded-xl border border-slate-200 px-4 text-base text-slate-900" />
                 <Text className="mb-2 mt-4 font-semibold text-slate-800">Date of birth <Text className="font-normal text-slate-500">(optional)</Text></Text>
